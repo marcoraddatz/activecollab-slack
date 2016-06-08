@@ -34,7 +34,8 @@ function slack_get_user_by_email($email, $token) {
  * @param $token
  */
 function slack_post_message($message, $channel, $token) {
-    if ($token) {
+    //changed by MUCKY - if customField3 is empty (slack channel '#general' is set) -> don't post to Slack
+    if ($token && $channel!='#general') {
         $slack = new Slack($token);
 
         $slack->call('chat.postMessage', array(
@@ -49,12 +50,13 @@ function slack_post_message($message, $channel, $token) {
 }
 
 /**
- * @param string $customField1
+ * changed by MUCKY - we'll use $customField3, 1 & 2 are already used
+ * @param string $customField3
  * @return string
  */
-function slack_get_channel($customField1 = '') {
+function slack_get_channel($customField3 = '') {
     $default = defined('SLACK_DEFAULT_CHANNEL') ? SLACK_DEFAULT_CHANNEL : '#general';
-    return !empty($customField1) ? $customField1 : $default;
+    return !empty($customField3) ? $customField3 : $default;
 }
 
 /**
@@ -63,7 +65,11 @@ function slack_get_channel($customField1 = '') {
  */
 function slack_get_token($customField2 = '') {
     $default = defined('SLACK_API_TOKEN') ? SLACK_API_TOKEN : '';
+    //changed by MUCKY - Use only default from Config, we don't have multiple Teams
+    /*
     return !empty($customField2) && defined('SLACK_API_TOKEN_' . strtoupper($customField2)) ?
         constant('SLACK_API_TOKEN_' . strtoupper($customField2)) : $default;
+    */
+    return $default;
 
 }

@@ -9,8 +9,10 @@ function slack_handle_on_object_completed($object) {
     if ($object instanceof Task) {
 
         $project    = $object->getProject();
-        $channel    = slack_get_channel( $project->getCustomField1() );
-        $token      = slack_get_token( $project->getCustomField2() );
+        //changed by MUCKY - Use getCustomField3 for channel
+        $channel    = slack_get_channel( $project->getCustomField3() );
+        //changed by MUCKY - No multiple Teams, so we get rid of getCustomField2()
+        $token      = slack_get_token();
 
         if ($channel && $token) {
 
